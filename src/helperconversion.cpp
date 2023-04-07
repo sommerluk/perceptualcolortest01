@@ -156,7 +156,7 @@ Trio fromXyzd65ToOklab(const Trio &value)
     //
     // Oklab: “First the XYZ coordinates are converted to an approximate
     // cone responses:”
-    auto lms = (*m1) * value; // NOTE Might contain negative entries
+    auto lms = (*m1) * value; // NOTE Entries might be negative.
     // LMS (long, medium, short) is the response of the three types of
     // cones of the human eye.
 
@@ -216,7 +216,7 @@ Trio fromOklabToXyzd65(const Trio &value)
     //
     // Oklab: “The inverse operation, going from Oklab to XYZ is done with
     // the following steps:”
-    auto lms = (*m2inverse) * value; // NOTE Might contain negative entries
+    auto lms = (*m2inverse) * value; // NOTE Entries might be negative.
     // LMS (long, medium, short) is the response of the three types of
     // cones of the human eye.
 

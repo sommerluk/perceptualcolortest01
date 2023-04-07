@@ -36,6 +36,7 @@ set(library_SRC
     colorwheel.cpp
     colorwheelimage.cpp
     extendeddoublevalidator.cpp
+    genericcolor.cpp
     gradientimageparameters.cpp
     gradientslider.cpp
     helper.cpp
@@ -48,6 +49,7 @@ set(library_SRC
     lchadouble.cpp
     lchdouble.cpp
     multicolor.cpp
+    multicolor2.cpp
     multirgb.cpp
     multispinbox.cpp
     multispinboxsection.cpp
