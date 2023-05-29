@@ -23,6 +23,7 @@ configure_file(
 ################# Setup source code #################
 # Set the sources for our library
 set(library_SRC
+    absolutecolor.cpp
     abstractdiagram.cpp
     asyncimageproviderbase.cpp
     asyncimagerendercallback.cpp
@@ -49,12 +50,12 @@ set(library_SRC
     lchadouble.cpp
     lchdouble.cpp
     multicolor.cpp
-    multicolor2.cpp
     multirgb.cpp
     multispinbox.cpp
     multispinboxsection.cpp
     polarpointf.cpp
     refreshiconengine.cpp
+    rgbcolor.cpp
     rgbcolorspace.cpp
     rgbcolorspacefactory.cpp
     rgbdouble.cpp

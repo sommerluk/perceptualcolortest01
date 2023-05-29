@@ -21,7 +21,46 @@
 namespace PerceptualColor
 {
 
+Q_NAMESPACE
+
 struct RgbDouble;
+
+/** @brief Identifiers for color spaces */
+enum class ColorSpace {
+    CielabD50, /**< Cielab color space using a D50 illuminant.
+        Lightness: [0, 100].<br/>
+        a: unbound.<br/>
+        b: unbound. */
+    CielchD50, /**< Cielch color space using a D50 illuminant.
+        Lightness: [0, 100].<br/>
+        Chroma: unbound.<br/>
+        Hue: [0, 360[. */
+    XyzD50, /**< Xyz color space using a D50 illuminant.
+        X: unbound.<br/>
+        Y: [0, 1].<br/>
+        Z: unbound. */
+    XyzD65, /**< Xzy color space using a D65 illuminant.
+        X: unbound.<br/>
+        Y: [0, 1].<br/>
+        Z: unbound. */
+    OklabD65, /**< Oklab color space, which by definition always and
+        exclusively uses a D65 illuminant.
+
+        Lightness: [0, 1].<br/>
+        a: unbound.<br/>
+        b: unbound. */
+    OklchD65 /**< Oklch color space, which by definition always and
+        exclusively uses a D65 illuminant.
+
+        Lightness: [0, 1].<br/>
+        Chroma: unbound.<br/>
+        Hue: [0, 360[. */
+};
+Q_ENUM_NS(ColorSpace)
+
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+uint qHash(const ColorSpace t, uint seed = 0); // clazy:exclude=qt6-qhash-signature
+#endif
 
 [[nodiscard]] cmsCIELab fromCmscielabD50ToOklab(const cmsCIELab &cielabD50);
 

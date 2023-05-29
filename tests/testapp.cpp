@@ -1,6 +1,7 @@
 ﻿// SPDX-FileCopyrightText: Lukas Sommer <sommerluk@gmail.com>
 // SPDX-License-Identifier: BSD-2-Clause OR MIT
 
+#include "absolutecolor.h" // IWYU pragma: keep
 #include "asyncimageprovider.h" // IWYU pragma: keep
 #include "asyncimageproviderbase.h" // IWYU pragma: keep
 #include "chromalightnessimageparameters.h" // IWYU pragma: keep
@@ -13,7 +14,6 @@
 #include "helpermath.h" // IWYU pragma: keep
 #include "initializetranslation.h" // IWYU pragma: keep
 #include "multicolor.h" // IWYU pragma: keep
-#include "multicolor2.h" // IWYU pragma: keep
 #include "oklchvalues.h" // IWYU pragma: keep
 #include "polarpointf.h" // IWYU pragma: keep
 #include "rgbcolorspace.h" // IWYU pragma: keep
@@ -67,19 +67,19 @@ using namespace PerceptualColor;
 int main(int argc, char *argv[])
 {
 #ifndef MSVC_DLL
-    const auto temp1 = MultiColor2::allConversions( //
-        MultiColor2::ColorSpace::XyzD65, //
+    const auto temp1 = AbsoluteColor::allConversions( //
+        ColorSpace::XyzD65, //
         GenericColor(0.20, 0.20, 0.61, 20));
-    QHashIterator<MultiColor2::ColorSpace, GenericColor> iterator1(temp1);
+    QHashIterator<ColorSpace, GenericColor> iterator1(temp1);
     while (iterator1.hasNext()) {
         iterator1.next();
         qDebug() << toString(iterator1.key()) << iterator1.value();
     }
 
-    const auto temp2 = MultiColor2::allConversions( //
-        MultiColor2::ColorSpace::OklchD65, //
+    const auto temp2 = AbsoluteColor::allConversions( //
+        ColorSpace::OklchD65, //
         GenericColor(0.585621, 0.142581, 253.545, 20));
-    QHashIterator<MultiColor2::ColorSpace, GenericColor> iterator2(temp2);
+    QHashIterator<ColorSpace, GenericColor> iterator2(temp2);
     while (iterator2.hasNext()) {
         iterator2.next();
         qDebug() << toString(iterator2.key()) << iterator2.value();

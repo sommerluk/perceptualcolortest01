@@ -1,10 +1,11 @@
 ﻿// SPDX-FileCopyrightText: Lukas Sommer <sommerluk@gmail.com>
 // SPDX-License-Identifier: BSD-2-Clause OR MIT
 
-#ifndef MULTICOLOR2_H
-#define MULTICOLOR2_H
+#ifndef ABSOLUTECOLOR_H
+#define ABSOLUTECOLOR_H
 
 #include "genericcolor.h"
+#include "helperconversion.h"
 #include <array>
 #include <qglobal.h>
 #include <qhash.h>
@@ -24,48 +25,12 @@ namespace PerceptualColor
 /** @internal
  *
  * @brief Toolbox for color conversions. */
-// TODO xxx Inherit from QObject: Necessary for Q_ENUM. Can be removed if the enum is outside the class.
-class MultiColor2 final : QObject
+class AbsoluteColor final
 {
-    // TODO xxx Q_OBJECT macro: Necessary for Q_ENUM. Can be removed if the enum is outside the class.
-    Q_OBJECT
-
 public:
-    MultiColor2() = delete;
-    /** @brief Identifiers for color spaces */
-    enum class ColorSpace {
-        CielabD50, /**< Cielab color space using a D50 illuminant.
-            Lightness: [0, 100].<br/>
-            a: unbound.<br/>
-            b: unbound. */
-        CielchD50, /**< Cielch color space using a D50 illuminant.
-            Lightness: [0, 100].<br/>
-            Chroma: unbound.<br/>
-            Hue: [0, 360[. */
-        XyzD50, /**< Xyz color space using a D50 illuminant.
-            X: unbound.<br/>
-            Y: [0, 1].<br/>
-            Z: unbound. */
-        XyzD65, /**< Xzy color space using a D65 illuminant.
-            X: unbound.<br/>
-            Y: [0, 1].<br/>
-            Z: unbound. */
-        OklabD65, /**< Oklab color space, which by definition always and
-            exclusively uses a D65 illuminant.
+    AbsoluteColor() = delete;
 
-            Lightness: [0, 1].<br/>
-            a: unbound.<br/>
-            b: unbound. */
-        OklchD65 /**< Oklch color space, which by definition always and
-            exclusively uses a D65 illuminant.
-
-            Lightness: [0, 1].<br/>
-            Chroma: unbound.<br/>
-            Hue: [0, 360[. */
-    };
-    Q_ENUM(ColorSpace)
-
-    static QHash<MultiColor2::ColorSpace, GenericColor> allConversions(const MultiColor2::ColorSpace space, const GenericColor &value);
+    static QHash<ColorSpace, GenericColor> allConversions(const ColorSpace space, const GenericColor &value);
 
 private:
     /** @brief Function pointer type for the conversion functions. */
@@ -106,15 +71,11 @@ private:
           {ColorSpace::CielabD50, ColorSpace::CielchD50, fromCartesianToPolar},
           {ColorSpace::OklabD65, ColorSpace::OklchD65, fromCartesianToPolar}}};
 
-    static QList<MultiColor2::Conversion> conversionsFrom(const ColorSpace space);
+    static QList<AbsoluteColor::Conversion> conversionsFrom(const ColorSpace space);
 
-    static void addDirectConversionsRecursivly(QHash<MultiColor2::ColorSpace, GenericColor> *values, const ColorSpace space);
+    static void addDirectConversionsRecursivly(QHash<ColorSpace, GenericColor> *values, const ColorSpace space);
 };
-
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-uint qHash(const MultiColor2::ColorSpace t, uint seed = 0); // clazy:exclude=qt6-qhash-signature
-#endif
 
 } // namespace PerceptualColor
 
-#endif // MULTICOLOR2_H
+#endif // ABSOLUTECOLOR_H

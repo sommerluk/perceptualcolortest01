@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-2-Clause OR MIT
 
 // Own header
-#include "multicolor2.h"
+#include "absolutecolor.h"
 
 #include "helpermath.h"
 #include "helperposixmath.h"
@@ -78,9 +78,9 @@ Q_GLOBAL_STATIC_WITH_ARGS( //
  * @param space The color space from which to convert.
  *
  * @returns List of all available conversions from this color space. */
-QList<MultiColor2::Conversion> MultiColor2::conversionsFrom(const ColorSpace space)
+QList<AbsoluteColor::Conversion> AbsoluteColor::conversionsFrom(const ColorSpace space)
 {
-    QList<MultiColor2::Conversion> result;
+    QList<AbsoluteColor::Conversion> result;
     for (const auto &item : conversionList) {
         if (item.from == space) {
             result.append(item);
@@ -101,7 +101,7 @@ QList<MultiColor2::Conversion> MultiColor2::conversionsFrom(const ColorSpace spa
  * available in <em>values</em>. If not, this value is calculated and added
  * to <em>values</em>, and this function is called recursively again for this
  * destination color space. */
-void MultiColor2::addDirectConversionsRecursivly(QHash<MultiColor2::ColorSpace, GenericColor> *values, MultiColor2::ColorSpace space)
+void AbsoluteColor::addDirectConversionsRecursivly(QHash<ColorSpace, GenericColor> *values, ColorSpace space)
 {
     const auto availableConversions = conversionsFrom(space);
     const auto currentValue = values->value(space);
@@ -120,9 +120,9 @@ void MultiColor2::addDirectConversionsRecursivly(QHash<MultiColor2::ColorSpace, 
  *
  * @returns A list containing the original value and containing conversions
  * to all other @ref ColorSpace. */
-QHash<MultiColor2::ColorSpace, GenericColor> MultiColor2::allConversions(const MultiColor2::ColorSpace space, const GenericColor &value)
+QHash<ColorSpace, GenericColor> AbsoluteColor::allConversions(const ColorSpace space, const GenericColor &value)
 {
-    QHash<MultiColor2::ColorSpace, GenericColor> result;
+    QHash<ColorSpace, GenericColor> result;
     result.insert(space, value);
     addDirectConversionsRecursivly(&result, space);
     return result;
@@ -152,7 +152,7 @@ QHash<MultiColor2::ColorSpace, GenericColor> MultiColor2::allConversions(const M
  * CIE 1931 XYZ color space</a>. The XYZ value has
  * <a href="https://bottosson.github.io/posts/oklab/#converting-from-xyz-to-oklab">
  * “a D65 whitepoint and white as Y=1”</a>. */
-GenericColor MultiColor2::fromOklabToXyzD65(const GenericColor &value)
+GenericColor AbsoluteColor::fromOklabToXyzD65(const GenericColor &value)
 {
     // The following algorithm is as described in
     // https://bottosson.github.io/posts/oklab/#converting-from-xyz-to-oklab
@@ -198,7 +198,7 @@ GenericColor MultiColor2::fromOklabToXyzD65(const GenericColor &value)
  * @returns the same color in
  * <a href="https://bottosson.github.io/posts/oklab/">
  * Oklab color space</a>. */
-GenericColor MultiColor2::fromXyzD65ToOklab(const GenericColor &value)
+GenericColor AbsoluteColor::fromXyzD65ToOklab(const GenericColor &value)
 {
     // The following algorithm is as described in
     // https://bottosson.github.io/posts/oklab/#converting-from-xyz-to-oklab
@@ -241,7 +241,7 @@ GenericColor MultiColor2::fromXyzD65ToOklab(const GenericColor &value)
  * @param value Color to be converted.
  *
  * @returns the converted color */
-GenericColor MultiColor2::fromXyzD65ToXyzD50(const GenericColor &value)
+GenericColor AbsoluteColor::fromXyzD65ToXyzD50(const GenericColor &value)
 {
     return GenericColor((*xyzD65ToXyzD50) * value.toTrio());
 }
@@ -253,7 +253,7 @@ GenericColor MultiColor2::fromXyzD65ToXyzD50(const GenericColor &value)
  * @param value Color to be converted.
  *
  * @returns the converted color */
-GenericColor MultiColor2::fromXyzD50ToXyzD65(const GenericColor &value)
+GenericColor AbsoluteColor::fromXyzD50ToXyzD65(const GenericColor &value)
 {
     return GenericColor((*xyzD50ToXyzD65) * value.toTrio());
 }
@@ -265,7 +265,7 @@ GenericColor MultiColor2::fromXyzD50ToXyzD65(const GenericColor &value)
  * @param value Color to be converted.
  *
  * @returns the converted color */
-GenericColor MultiColor2::fromXyzD50ToCielabD50(const GenericColor &value)
+GenericColor AbsoluteColor::fromXyzD50ToCielabD50(const GenericColor &value)
 {
     const cmsCIEXYZ cmsXyzD50 = value.reinterpretAsXyzToCmsciexyz();
     cmsCIELab result;
@@ -282,7 +282,7 @@ GenericColor MultiColor2::fromXyzD50ToCielabD50(const GenericColor &value)
  * @param value Color to be converted.
  *
  * @returns the converted color */
-GenericColor MultiColor2::fromCielabD50ToXyzD50(const GenericColor &value)
+GenericColor AbsoluteColor::fromCielabD50ToXyzD50(const GenericColor &value)
 {
     const auto temp = value.reinterpretAsLabToCmscielab();
     cmsCIEXYZ xyzD50;
@@ -303,7 +303,7 @@ GenericColor MultiColor2::fromCielabD50ToXyzD50(const GenericColor &value)
  * This is a generic function converting between polar coordinates
  * (format: ignored, radius, angleDegree, ignored) and Cartesian coordinates
  * (format: ignored, x, y, ignored). */
-GenericColor MultiColor2::fromCartesianToPolar(const GenericColor &value)
+GenericColor AbsoluteColor::fromCartesianToPolar(const GenericColor &value)
 {
     GenericColor result = value;
     const auto &x = value.second;
@@ -333,7 +333,7 @@ GenericColor MultiColor2::fromCartesianToPolar(const GenericColor &value)
  * This is a generic function converting between polar coordinates
  * (format: ignored, radius, angleDegree, ignored) and Cartesian coordinates
  * (format: ignored, x, y, ignored). */
-GenericColor MultiColor2::fromPolarToCartesian(const GenericColor &value)
+GenericColor AbsoluteColor::fromPolarToCartesian(const GenericColor &value)
 {
     const auto &radius = value.second;
     const auto &angleDegree = value.third;
@@ -342,25 +342,5 @@ GenericColor MultiColor2::fromPolarToCartesian(const GenericColor &value)
                         radius * sin(qDegreesToRadians(angleDegree)),
                         value.fourth);
 }
-
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-/** @internal
- *
- * @brief A qHash function for MultiColor2::Colorspace.
- *
- * Qt5 needs a qHash function if QHash’s key is an enum class. Qt6 does not
- * need this. Therefore, this function is only compiled into the Qt5 builds.
- *
- * @warning This is not part of the public API! It can change or be
- * removed totally at any type. */
-uint qHash(const MultiColor2::ColorSpace t, uint seed) // clazy:exclude=qt6-qhash-signature
-{
-    using UnderlyingType = std::underlying_type<MultiColor2::ColorSpace>::type;
-    const auto underlyingValue = static_cast<UnderlyingType>(t);
-    // “::” selects one of Qt’s qHash functions (instead of recursively calling
-    // this very same function).
-    return ::qHash(underlyingValue, seed);
-}
-#endif
 
 } // namespace PerceptualColor
