@@ -16,14 +16,11 @@ jobs:
           brew update
           brew install cmake
           
-      - name: Install MacPorts
-        run: |
-          sudo port selfupdate
 
       - name: Install ECM
         run: |
-          sudo port selfupdate
-          sudo port install kde-frameworks-ecm
+          brew update
+          brew install kde-mac/kde/ecm
 
       - name: Build project
         run: |
