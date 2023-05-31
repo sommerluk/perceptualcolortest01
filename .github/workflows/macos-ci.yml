@@ -15,16 +15,10 @@ jobs:
         run: |
           brew update
           brew install cmake
-
+          
       - name: Install MacPorts
         run: |
-          curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.7.3.tar.bz2
-          tar xf MacPorts-2.7.3.tar.bz2
-          cd MacPorts-2.7.3
-          ./configure --prefix=/opt/local
-          make
-          sudo make install
-          export PATH="/opt/local/bin:$PATH"
+          sudo port selfupdate
 
       - name: Install ECM
         run: |
