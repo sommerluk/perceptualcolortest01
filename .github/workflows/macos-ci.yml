@@ -11,8 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up CMake
-        uses: Kitware/setup-cmake@v1
+      - name: Install CMake
+        run: |
+          brew update
+          brew install cmake
 
       - name: Build project
         run: |
