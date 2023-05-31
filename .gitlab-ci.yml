@@ -7,84 +7,129 @@
 
 
 
-# Efficient CI resource usage: Splitting into various stages to avoid
-# unnecessary work load. The Ubuntu-based jobs use an image that
-# does not come from KDE. Therefore we use them as less as possible.
-stages:
-  - build
-  - iwyu
+## Efficient CI resource usage: Splitting into various stages to avoid
+## unnecessary work load. The Ubuntu-based jobs use an image that
+## does not come from KDE. Therefore we use them as less as possible.
+#stages:
+  #- build
+  #- iwyu
 
 
 
 
 
-variables:
-  # Accept default answer for all questions during Debian/Ubuntu
-  # package management:
-  DEBIAN_FRONTEND: "noninteractive"
+#variables:
+  ## Accept default answer for all questions during Debian/Ubuntu
+  ## package management:
+  #DEBIAN_FRONTEND: "noninteractive"
 
 
 
 
 
-codecheck_cppcheck:
-  # Like the cppcheck that invent.kde.org provides, but exit status depends
-  # on if issues have been found or not. And it runs always, and not only
-  # when C++ code has changed. And it provides its results directly as
-  # well-formatted JSON.
-  stage: build
-  image: invent-registry.kde.org/sysadmin/ci-images/suse-qt515:latest
-  tags:
-    - Linux
-  interruptible: true
-  before_script:
-    - git clone https://invent.kde.org/sysadmin/ci-utilities
-  script:
-    - python3 -u ci-utilities/run-cppcheck.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME
-    - if [ "$(cat cppcheck.json)" == "[]" ]; then
-    -     echo "cppcheck did not find any issues."
-    -     exit 0
-    - else
-    -     echo "cppcheck found issues."
-    -     echo "Format cppcheck’s JSON… output for usage as artifact."
-    -     python3 -m json.tool cppcheck.json > artifact_cppcheck.json
-    -     exit 1
-    - fi
-  rules:
-    - when: always
-      allow_failure: false
-  artifacts:
-    expire_in: 20 weeks
-    when: always
-    paths:
-      - artifact_cppcheck.json
-    reports:
-      codequality: cppcheck.json
+#codecheck_cppcheck:
+  ## Like the cppcheck that invent.kde.org provides, but exit status depends
+  ## on if issues have been found or not. And it runs always, and not only
+  ## when C++ code has changed. And it provides its results directly as
+  ## well-formatted JSON.
+  #stage: build
+  #image: invent-registry.kde.org/sysadmin/ci-images/suse-qt515:latest
+  #tags:
+    #- Linux
+  #interruptible: true
+  #before_script:
+    #- git clone https://invent.kde.org/sysadmin/ci-utilities
+  #script:
+    #- python3 -u ci-utilities/run-cppcheck.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME
+    #- if [ "$(cat cppcheck.json)" == "[]" ]; then
+    #-     echo "cppcheck did not find any issues."
+    #-     exit 0
+    #- else
+    #-     echo "cppcheck found issues."
+    #-     echo "Format cppcheck’s JSON… output for usage as artifact."
+    #-     python3 -m json.tool cppcheck.json > artifact_cppcheck.json
+    #-     exit 1
+    #- fi
+  #rules:
+    #- when: always
+      #allow_failure: false
+  #artifacts:
+    #expire_in: 20 weeks
+    #when: always
+    #paths:
+      #- artifact_cppcheck.json
+    #reports:
+      #codequality: cppcheck.json
 
 
 
 
 
-codecheck_iwyu:
-  image: invent-registry.kde.org/sysadmin/ci-images/suse-qt515:latest
-  tags:
-    - Linux
-  interruptible: true
-  rules:
-    - when: on_success
-      allow_failure: true
-  artifacts:
-    expire_in: 20 weeks
-    when: always
-    paths:
-      - artifact_iwyu.txt
-  stage: iwyu
-  dependencies:
-    - codecheck_test
-  script:
-    - if [ -f "artifact_iwyu.txt" ]; then
-    -   exit 1
-    - fi
+#codecheck_iwyu:
+  #image: invent-registry.kde.org/sysadmin/ci-images/suse-qt515:latest
+  #tags:
+    #- Linux
+  #interruptible: true
+  #rules:
+    #- when: on_success
+      #allow_failure: true
+  #artifacts:
+    #expire_in: 20 weeks
+    #when: always
+    #paths:
+      #- artifact_iwyu.txt
+  #stage: iwyu
+  #dependencies:
+    #- codecheck_test
+  #script:
+    #- if [ -f "artifact_iwyu.txt" ]; then
+    #-   exit 1
+    #- fi
+
+
+
+
+
+
+#codecheck_test:
+  #image: ubuntu:22.04
+  #tags:
+    #- Linux
+  #interruptible: true
+  #rules:
+    #- when: always
+      #allow_failure: false
+  #artifacts:
+    #expire_in: 20 weeks
+    #when: always
+    #paths:
+      #- artifact_*
+  #stage: build
+  #before_script:
+    #- apt-get update --assume-yes
+    ## NOTE For some obscure reason, iwyu does not print anything if clazy
+    ## is not installed. So we would even have to install it, when we would
+    ## not need it otherwise.
+    #- apt-get install --assume-yes --no-install-recommends cmake make clang clang-format liblcms2-dev liblcms2-2 pkgconf extra-cmake-modules qt6-base-dev qt6-base-dev-tools qt6-l10n-tools libegl-dev qt6-tools-dev qt6-tools-dev-tools git python3-pip doxygen graphviz wget clazy clang-tidy iwyu
+    ## The following commands are necessary for the qch build. And
+    ## it seems that ecm_add_qch() has still some explicit Qt5 dependencies:
+    #- apt-get install --assume-yes --no-install-recommends qt6-documentation-tools texlive-latex-base qtbase5-dev qtbase5-dev-tools qttools5-dev
+    ## Version information about installed software:
+    #- echo "pip version:" && pip --version
+    #- pip install cmakelint
+    #- echo "cmakelint version:" && cmakelint --version
+    #- echo "doxygen version:" && doxygen --version
+    #- echo "graphviz dot version:" && dot -V
+    #- /usr/lib/qt6/bin/qhelpgenerator -v
+    ## The following commands make a graphical shell available
+    ## (necessary for generatescreenshots).
+    #- apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
+    #- export DISPLAY=':90'
+    #- Xvfb :90 -ac -screen 0 1600x1200x24+32 &
+    #- sleep 5s
+    #- openbox &
+  #script:
+    #- scripts/ci-test.sh
 
 
 
@@ -92,7 +137,7 @@ codecheck_iwyu:
 
 
 codecheck_test:
-  image: ubuntu:22.04
+  image: macos
   tags:
     - Linux
   interruptible: true
@@ -106,28 +151,28 @@ codecheck_test:
       - artifact_*
   stage: build
   before_script:
-    - apt-get update --assume-yes
-    # NOTE For some obscure reason, iwyu does not print anything if clazy
-    # is not installed. So we would even have to install it, when we would
-    # not need it otherwise.
-    - apt-get install --assume-yes --no-install-recommends cmake make clang clang-format liblcms2-dev liblcms2-2 pkgconf extra-cmake-modules qt6-base-dev qt6-base-dev-tools qt6-l10n-tools libegl-dev qt6-tools-dev qt6-tools-dev-tools git python3-pip doxygen graphviz wget clazy clang-tidy iwyu
-    # The following commands are necessary for the qch build. And
-    # it seems that ecm_add_qch() has still some explicit Qt5 dependencies:
-    - apt-get install --assume-yes --no-install-recommends qt6-documentation-tools texlive-latex-base qtbase5-dev qtbase5-dev-tools qttools5-dev
-    # Version information about installed software:
-    - echo "pip version:" && pip --version
-    - pip install cmakelint
-    - echo "cmakelint version:" && cmakelint --version
-    - echo "doxygen version:" && doxygen --version
-    - echo "graphviz dot version:" && dot -V
-    - /usr/lib/qt6/bin/qhelpgenerator -v
-    # The following commands make a graphical shell available
-    # (necessary for generatescreenshots).
-    - apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
-    - export DISPLAY=':90'
-    - Xvfb :90 -ac -screen 0 1600x1200x24+32 &
-    - sleep 5s
-    - openbox &
+    #- apt-get update --assume-yes
+    ## NOTE For some obscure reason, iwyu does not print anything if clazy
+    ## is not installed. So we would even have to install it, when we would
+    ## not need it otherwise.
+    #- apt-get install --assume-yes --no-install-recommends cmake make clang clang-format liblcms2-dev liblcms2-2 pkgconf extra-cmake-modules qt6-base-dev qt6-base-dev-tools qt6-l10n-tools libegl-dev qt6-tools-dev qt6-tools-dev-tools git python3-pip doxygen graphviz wget clazy clang-tidy iwyu
+    ## The following commands are necessary for the qch build. And
+    ## it seems that ecm_add_qch() has still some explicit Qt5 dependencies:
+    #- apt-get install --assume-yes --no-install-recommends qt6-documentation-tools texlive-latex-base qtbase5-dev qtbase5-dev-tools qttools5-dev
+    ## Version information about installed software:
+    #- echo "pip version:" && pip --version
+    #- pip install cmakelint
+    #- echo "cmakelint version:" && cmakelint --version
+    #- echo "doxygen version:" && doxygen --version
+    #- echo "graphviz dot version:" && dot -V
+    #- /usr/lib/qt6/bin/qhelpgenerator -v
+    ## The following commands make a graphical shell available
+    ## (necessary for generatescreenshots).
+    #- apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
+    #- export DISPLAY=':90'
+    #- Xvfb :90 -ac -screen 0 1600x1200x24+32 &
+    #- sleep 5s
+    #- openbox &
   script:
     - scripts/ci-test.sh
 
@@ -135,27 +180,27 @@ codecheck_test:
 
 
 
-include:
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/android-qt6.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/android.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-arm32.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-arm64.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-base.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-x86-64.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-appimage.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-base.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-mingw64.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-x86-64.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/flatpak.yml
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd-qt6.yml
-  # - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-static.yml
-  # NOTE The following line adds Linux build. Furthermore, it adds a job for
-  # cppcheck, but only if there were actual changes to CPP code since last time.
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml
-  # NOTE The following line runs reuse-lint on everything except translations.
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows-qt6.yml
-  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows-static.yml
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows.yml
+#include:
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/android-qt6.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/android.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-arm32.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-arm64.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-base.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-android-x86-64.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-appimage.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-base.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-mingw64.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/craft-windows-x86-64.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/flatpak.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd-qt6.yml
+  ## - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-static.yml
+  ## NOTE The following line adds Linux build. Furthermore, it adds a job for
+  ## cppcheck, but only if there were actual changes to CPP code since last time.
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml
+  ## NOTE The following line runs reuse-lint on everything except translations.
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows-qt6.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows-static.yml
+  ##- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows.yml
