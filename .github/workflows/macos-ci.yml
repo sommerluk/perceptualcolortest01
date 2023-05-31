@@ -1,6 +1,5 @@
 name: macOS CI
 
-
 jobs:
   build:
     runs-on: macos-latest
