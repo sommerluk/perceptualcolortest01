@@ -1,8 +1,5 @@
 name: macOS CI
 
-on:
-  push:
-  pull_request:
 
 jobs:
   build:
