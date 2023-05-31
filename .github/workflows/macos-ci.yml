@@ -19,6 +19,8 @@ jobs:
 
       - name: Install ECM
         run: |
+          git config --global user.name "[USERNAME]"
+          git config --global user.email "[EMAIL]"
           brew update
           brew install kde-mac/kde/ecm
 
