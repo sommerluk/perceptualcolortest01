@@ -11,10 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install CMake
+      - name: Install dependencies
         run: |
           brew update
-          brew install cmake
+          brew install cmake qt
 
       - name: Build project
         run: |
