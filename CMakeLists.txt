@@ -467,10 +467,6 @@ find_package( # Necessary for find_package(LCMS2)
 find_package(
     LCMS2
     REQUIRED)
-find_package(
-    ECM 5.82 # Version 5.82 required for QtVersionOption
-    REQUIRED
-    NO_MODULE)
 list(APPEND CMAKE_MODULE_PATH
     ${ECM_MODULE_PATH})
 include(QtVersionOption) # Provides ${QT_MAJOR_VERSION}

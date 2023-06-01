@@ -858,7 +858,7 @@
  *   specification</a>. The source code of the library itself (and also this
  *   documentation itself) are dual-licensed. You can use it (at your option)
  *   either under BSD-2-Clause or MIT. Deviating from this, some CMake files
- *   are exclusively BSD-3-Clause.
+ *   are exclusively BSD-3-Clause or exclusively under MIT.
  * - Other parts of the codebase (which will
  *   <em>not</em> be installed by CMake, examples include <em>autotests</em>
  *   and <em>utils</em>) might have different licenses and/or include
