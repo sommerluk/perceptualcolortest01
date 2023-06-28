@@ -21,7 +21,7 @@ jobs:
           
   cmake-build:
     docker:
-      - image: cimg/qt:5.15.2
+      - image: ubuntu:20.04
     steps:
       - checkout
       - run:
