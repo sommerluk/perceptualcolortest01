@@ -37,7 +37,9 @@ jobs:
             # (necessary for generatescreenshots).
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             apt-get install --assume-yes --no-install-recommends libxkbcommon-x11-0 libxcb1-dev libxcb-xinerama0 libxcb-xinerama0-dev qt6-base-dev libxcb-cursor0 '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+            echo QT_QPA_PLATFORM before: $QT_QPA_PLATFORM
             export QT_QPA_PLATFORM=offscreen
+            echo QT_QPA_PLATFORM after: $QT_QPA_PLATFORM
             echo DISPLAY before: $DISPLAY
             export DISPLAY=':90'
             echo DISPLAY after: $DISPLAY
@@ -65,6 +67,7 @@ jobs:
             echo openbox status BEGIN
             ps aux | grep openbox
             echo openbox status END
+            echo QT_QPA_PLATFORM: $QT_QPA_PLATFORM
             autotests/testhelperqttypes
             # cmake --build . --target test
             cd ..
