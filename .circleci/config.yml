@@ -26,7 +26,9 @@ jobs:
       - checkout
       - run:
           name: Install LittleCMS
-          command: sudo apt-get install -y liblcms2-dev
+          command: |
+            apt-get update
+            apt-get install -y cmake liblcms2-dev qt5-default
       - run:
           name: Build CMake project
           command: cmake . && make
