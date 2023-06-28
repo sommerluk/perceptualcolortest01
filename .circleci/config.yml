@@ -8,7 +8,8 @@ jobs:
   cmake-build:
     docker:
       # See: https://circleci.com/docs/configuration-reference/#executor-job
-      - image: s390x/ubuntu:22.04
+      # TODO Switch to s390x/ubuntu:22.04
+      - image: s390x/ubuntu:20.04
     steps:
       # See: https://circleci.com/docs/configuration-reference/#steps
       - checkout
