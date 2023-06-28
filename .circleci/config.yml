@@ -37,6 +37,7 @@ jobs:
             # (necessary for generatescreenshots).
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             apt-get install --assume-yes --no-install-recommends libxkbcommon-x11-0 libxcb1-dev libxcb-xinerama0 libxcb-xinerama0-dev qt6-base-dev libxcb-cursor0 '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+            export QT_QPA_PLATFORM=offscreen
             export DISPLAY=':90'
             echo Xvfb status BEGIN
             ps aux | grep Xvfb
