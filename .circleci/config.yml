@@ -37,14 +37,17 @@ jobs:
             # (necessary for generatescreenshots).
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             export DISPLAY=':90'
+            echo Xvfb status BEGIN
+            ps aux | grep Xvfb
+            echo Xvfb status END
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
+            echo Xvfb status BEGIN
+            ps aux | grep Xvfb
+            echo Xvfb status END
             sleep 15s
             echo Xvfb status BEGIN
             ps aux | grep Xvfb
             echo Xvfb status END
-            echo Xvfb log BEGIN
-            cat /var/log/Xvfb.log
-            echo Xvfb log END
             echo Xvfb log BEGIN
             cat /tmp/Xvfb.log
             echo Xvfb log END
