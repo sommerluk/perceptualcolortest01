@@ -39,14 +39,20 @@ jobs:
             export DISPLAY=':90'
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
             sleep 15s
-            echo Xvfb status (BEGIN)
+            echo Xvfb status BEGIN
             ps aux | grep Xvfb
-            echo Xvfb status (END)
+            echo Xvfb status END
+            echo Xvfb log BEGIN
+            cat /var/log/Xvfb.log
+            echo Xvfb log END
+            echo Xvfb log BEGIN
+            cat /tmp/Xvfb.log
+            echo Xvfb log END
             openbox &
             sleep 15s
-            echo openbox status (BEGIN)
+            echo openbox status BEGIN
             ps aux | grep openbox
-            echo openbox status (END)
+            echo openbox status END
       - run:
           name: Build CMake project
           command: |
