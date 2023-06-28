@@ -44,9 +44,13 @@ jobs:
             export DISPLAY=':90'
             echo DISPLAY after: $DISPLAY
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
-            sleep 15s
+            echo sleep BEGIN
+            sleep 60s
+            echo sleep END
             openbox &
-            sleep 15s
+            echo sleep BEGIN
+            sleep 60s
+            echo sleep END
             echo openbox status BEGIN
             ps aux | grep openbox
             echo openbox status END
@@ -68,6 +72,7 @@ jobs:
             ps aux | grep openbox
             echo openbox status END
             echo QT_QPA_PLATFORM: $QT_QPA_PLATFORM
+            echo DISPLAY: $DISPLAY
             autotests/testhelperqttypes
             # cmake --build . --target test
             cd ..
