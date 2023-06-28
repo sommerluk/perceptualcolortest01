@@ -38,8 +38,15 @@ jobs:
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             export DISPLAY=':90'
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
-            sleep 5s
+            sleep 15s
+            echo Xvfb status (BEGIN)
+            ps aux | grep Xvfb
+            echo Xvfb status (END)
             openbox &
+            sleep 15s
+            echo openbox status (BEGIN)
+            ps aux | grep openbox
+            echo openbox status (END)
       - run:
           name: Build CMake project
           command: |
