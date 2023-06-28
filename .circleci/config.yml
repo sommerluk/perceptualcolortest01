@@ -16,13 +16,20 @@ jobs:
           name: Set noninteractive environment
           command: echo 'export DEBIAN_FRONTEND=noninteractive' >> $BASH_ENV
       - run:
-          name: Install LittleCMS
+          name: Install dependencies
           command: |
             apt-get update --assume-yes
             apt-get install --assume-yes --no-install-recommends cmake make clang clang-format liblcms2-dev liblcms2-2 pkgconf extra-cmake-modules qt6-base-dev qt6-base-dev-tools libqt6svg6-dev qt6-l10n-tools libegl-dev qt6-tools-dev qt6-tools-dev-tools git python3-pip doxygen graphviz wget clazy clang-tidy iwyu
       - run:
           name: Build CMake project
-          command: cmake . && make
+          command: |
+            echo Number of available CPU threads: $PARALLEL_PROCESSES
+            rm --recursive --force build
+            mkdir --parents build
+            cd build
+            cmake -DBUILD_WITH_QT6=ON ..
+            cmake --build . --parallel $PARALLEL_PROCESSES
+            cmake --build . --target install --parallel $PARALLEL_PROCESSES
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
