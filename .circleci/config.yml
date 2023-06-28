@@ -38,7 +38,7 @@ jobs:
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             apt-get install --assume-yes --no-install-recommends libxkbcommon-x11-0 libxcb1-dev libxcb-xinerama0 libxcb-xinerama0-dev qt6-base-dev libxcb-cursor0 '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev            
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
-            sleep 60s
+            sleep 5s
             openbox &
       - run:
           name: Build project
