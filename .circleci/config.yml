@@ -38,6 +38,17 @@ jobs:
             apt-get install --assume-yes --no-install-recommends xvfb openbox fonts-noto-core
             apt-get install --assume-yes --no-install-recommends libxkbcommon-x11-0 libxcb1-dev libxcb-xinerama0 libxcb-xinerama0-dev qt6-base-dev libxcb-cursor0 '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
       - run:
+          name: Xvfb
+          command: |
+            # Xvfb :90 -ac -screen 0 1600x1200x24+32 &
+          background: true
+      - run:
+          name: openbox
+          command: |
+            # sleep 60s
+            # openbox &
+          background: true
+      - run:
           name: Build CMake project
           command: |
             PARALLEL_PROCESSES=`nproc --all`
@@ -48,34 +59,15 @@ jobs:
             cmake -DBUILD_WITH_QT6=ON ..
             cmake --build . --parallel $PARALLEL_PROCESSES
             cmake --build . --target install --parallel $PARALLEL_PROCESSES
-
-            echo QT_QPA_PLATFORM before: $QT_QPA_PLATFORM
-            export QT_QPA_PLATFORM=offscreen
-            echo QT_QPA_PLATFORM after: $QT_QPA_PLATFORM
-            echo DISPLAY before: $DISPLAY
+            # echo QT_QPA_PLATFORM before: $QT_QPA_PLATFORM
+            # export QT_QPA_PLATFORM=offscreen
+            # echo QT_QPA_PLATFORM after: $QT_QPA_PLATFORM
             export DISPLAY=':90'
-            echo DISPLAY after: $DISPLAY
             Xvfb :90 -ac -screen 0 1600x1200x24+32 &
-            echo sleep BEGIN
             sleep 60s
-            echo sleep END
             openbox &
-            echo sleep BEGIN
             sleep 60s
-            echo sleep END
-            echo openbox status BEGIN
-            ps aux | grep openbox
-            echo openbox status END
-            echo Xvfb status BEGIN
-            ps aux | grep Xvfb
-            echo Xvfb status END
-            echo openbox status BEGIN
-            ps aux | grep openbox
-            echo openbox status END
-            echo QT_QPA_PLATFORM: $QT_QPA_PLATFORM
-            echo DISPLAY: $DISPLAY
-            autotests/testhelperqttypes
-            # cmake --build . --target test
+            cmake --build . --target test
             cd ..
             rm --recursive --force buildexamples
             mkdir --parents buildexamples
