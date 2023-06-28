@@ -51,6 +51,7 @@ jobs:
             cmake -DBUILD_WITH_QT6=ON ..
             cmake --build . --parallel $PARALLEL_PROCESSES
             cmake --build . --target install --parallel $PARALLEL_PROCESSES
+            autotests/testhelperqttypes
             # cmake --build . --target test
             cd ..
             rm --recursive --force buildexamples
