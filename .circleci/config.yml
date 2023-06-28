@@ -18,9 +18,22 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+jobs:
+  cmake-build:
+    docker:
+      - image: cimg/qt:5.15.2
+    steps:
+      - checkout
+      - run:
+          name: Install LittleCMS
+          command: sudo apt-get install -y liblcms2-dev
+      - run:
+          name: Build CMake project
+          command: cmake . && make
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
-workflows:
-  say-hello-workflow:
-    jobs:
-      - say-hello
+#workflows:
+#  say-hello-workflow:
+#    jobs:
+#      - say-hello
